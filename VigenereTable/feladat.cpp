@@ -16,7 +16,7 @@
 #define KEY_TEXT_LENGTH 6
 #define ABC_SIZE 26
 
-// If someone need to generate vtable.dat. (I needed to compile it on my Android phone.)
+// If someone needs to generate vtable.dat. (I needed to compile it on my Android phone.)
 void GenerateVtable()
 {
 	FILE *fp=fopen("vtable.dat","w");
@@ -98,10 +98,10 @@ char ConvertChar(char cInput)
 int main()
 {
 	char codeText[CODE_TEXT_LENGTH] = "";
-	char keyTextLong[CODE_TEXT_LENGTH] = "";
+	char keyTextLong[CODE_TEXT_LENGTH+KEY_TEXT_LENGTH-2] = "";
 	char keyText[KEY_TEXT_LENGTH] = "";
 	char vtable[ABC_SIZE][ABC_SIZE];
-	char encodeText[CODE_TEXT_LENGTH+KEY_TEXT_LENGTH-2] = "";
+	char encodeText[CODE_TEXT_LENGTH] = "";
 
 // Input text //
 	printf("Kérem adja meg a szöveget (max 255 karakter): ");
@@ -186,3 +186,6 @@ int main()
 
 	return 0;
 }
+
+// Most próbálok egy nagyon hosszú szöveget beírni, aminek a hossza pont kétszázöntenöt karakter. Ez nem is olyan könnyû. FElsorlolom az összes ékezetet: áéûúõóüöí és nagybetûsen is: ÉÁÛÕÚÜÖÓÍ. Most már csak kb ötven betû kellene még. Persze a nem betûk mia
+// MostpróbálokegynagyonhosszúszövegetbeírniaminekahosszapontkétszázöntenötkarakterEznemisolyankönnyûFElsorlolomazösszesékezetetáéûúõóüöíésnagybetûsenisÉÁÛÕÚÜÖÓÍMostmárcsakkbötvenbetûkellenemégPerszeanembetûkmiattennéljóvaltöbbkellLátniakaromhogyeztisjólkeze
