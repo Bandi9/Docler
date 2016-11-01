@@ -15,6 +15,7 @@
 #define CODE_TEXT_LENGTH 256
 #define ABC_SIZE 26
 
+// If someone need to generate vtable.dat. (I needed to compile it on my Android phone.)
 void GenerateVtable()
 {
 	FILE *fp=fopen("vtable.dat","w");
@@ -43,7 +44,8 @@ void GenerateVtable()
 }
 
 
-char DecodeChar(char cInput)
+// Convert text to uppercase, remove non letters and convert special hungarian characters to english.
+char ConvertChar(char cInput)
 {
 	char cOutput = '\0';
 
@@ -109,7 +111,7 @@ int main()
 	int codeTextLen = strlen(codeText);
 	for(read=write=0; read<codeTextLen; read++)
 	{
-		char newChar=DecodeChar(codeText[read]);
+		char newChar=ConvertChar(codeText[read]);
 		if(newChar!='\0')
 		{
 			codeText[write++]=newChar;
