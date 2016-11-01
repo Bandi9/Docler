@@ -13,6 +13,7 @@
 #define VIGENERE_INPUT_FILE "vtabla.dat"
 #define VIGENERE_OUTPUT_FILE "kodolt.dat"
 #define CODE_TEXT_LENGTH 256
+#define KEY_TEXT_LENGTH 6
 #define ABC_SIZE 26
 
 // If someone need to generate vtable.dat. (I needed to compile it on my Android phone.)
@@ -32,7 +33,7 @@ void GenerateVtable()
 
 				fputc(character+'A', fp);
 			}
-			if(i<25)
+			if(i<ABC_SIZE-1)
 				fputc('\n', fp);
 		}
 		fclose(fp);
@@ -96,11 +97,11 @@ char ConvertChar(char cInput)
 
 int main()
 {
-	char codeText[CODE_TEXT_LENGTH] = "Ez a próba szöveg, amit kódolunk!";
+	char codeText[CODE_TEXT_LENGTH] = "";
 	char keyTextLong[CODE_TEXT_LENGTH] = "";
-	char keyText[6] = "auto";
+	char keyText[KEY_TEXT_LENGTH] = "";
 	char vtable[ABC_SIZE][ABC_SIZE];
-	char encodeText[CODE_TEXT_LENGTH] = "";
+	char encodeText[CODE_TEXT_LENGTH+KEY_TEXT_LENGTH-2] = "";
 
 // Input text //
 	printf("Kérem adja meg a szöveget (max 255 karakter): ");
@@ -121,7 +122,7 @@ int main()
 	printf("\nAz átalakított nyílt szöveg: %s\n",codeText);
 
 // Input key //
-	printf("Kérem adja meg a kulcsot (min 1, max 5 karakter): ");
+	printf("Kérem adja meg a kulcsot (min 1, max %d karakter): ", KEY_TEXT_LENGTH-1);
 	gets(keyText);
 
 // Convert key to uppercase //
