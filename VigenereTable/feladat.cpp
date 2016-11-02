@@ -12,8 +12,8 @@
 
 #define VIGENERE_INPUT_FILE "vtabla.dat"
 #define VIGENERE_OUTPUT_FILE "kodolt.dat"
-#define CODE_TEXT_LENGTH 256
-#define KEY_TEXT_LENGTH 6
+#define CODE_TEXT_SIZE 255
+#define KEY_TEXT_SIZE 5
 #define ABC_SIZE 26
 
 // If someone needs to generate vtable.dat. (I needed to compile it on my Android phone.)
@@ -48,7 +48,7 @@ void GenerateVtable()
 // Convert text to uppercase, remove non letters and convert special hungarian characters to english.
 char ConvertChar(char cInput)
 {
-	char cOutput = '\0';
+	char cOutput = 0;
 
 	if('A'<=cInput && cInput<='Z')
 		cOutput=cInput;
@@ -97,23 +97,30 @@ char ConvertChar(char cInput)
 
 int main()
 {
-	char codeText[CODE_TEXT_LENGTH] = "";
-	char keyTextLong[CODE_TEXT_LENGTH+KEY_TEXT_LENGTH-2] = "";
-	char keyText[KEY_TEXT_LENGTH] = "";
+	char codeText[CODE_TEXT_SIZE+2] = "";
+	char keyTextLong[CODE_TEXT_SIZE+KEY_TEXT_SIZE] = "";
+	char keyText[KEY_TEXT_SIZE+2] = "";
 	char vtable[ABC_SIZE][ABC_SIZE];
-	char encodeText[CODE_TEXT_LENGTH] = "";
+	char encodeText[CODE_TEXT_SIZE+1] = "";
 
 // Input text //
-	printf("Kérem adja meg a szöveget (max 255 karakter): ");
-	gets(codeText);
-
-// Convert text to uppercase, remove non letters and convert special hungarian characters to english //
-	int read, write;
+	printf("Kérem adja meg a szöveget (max %d karakter): ", CODE_TEXT_SIZE);
+	fgets(codeText, CODE_TEXT_SIZE+1, stdin);
+	if (codeText[strlen(codeText)-1]=='\n')
+		codeText[strlen(codeText)-1]=0;		// remove \n character from the end of text
 	int codeTextLen = strlen(codeText);
+	if (codeTextLen==0)
+	{
+		printf("Üres szöveg!");
+		return -1;
+	}
+
+// Convert text to upper case, remove non letters and convert special hungarian characters to english //
+	int read, write;
 	for(read=write=0; read<codeTextLen; read++)
 	{
 		char newChar=ConvertChar(codeText[read]);
-		if(newChar!='\0')
+		if(newChar!=0)
 		{
 			codeText[write++]=newChar;
 		}
@@ -122,22 +129,31 @@ int main()
 	printf("\nAz átalakított nyílt szöveg: %s\n",codeText);
 
 // Input key //
-	printf("Kérem adja meg a kulcsot (min 1, max %d karakter): ", KEY_TEXT_LENGTH-1);
-	gets(keyText);
+	printf("Kérem adja meg a kulcsot (min 1, max %d karakter): ", KEY_TEXT_SIZE);
+	fgets(keyText, KEY_TEXT_SIZE+1, stdin);
+	if (keyText[strlen(keyText)-1]=='\n')
+		keyText[strlen(keyText)-1]=0;		// remove \n character from the end of text
 
-// Convert key to uppercase //
+// Convert key to upper case //
 	int i;
 	int keyTextLen = strlen(keyText);
 	for(i=0;i<keyTextLen;i++)
 	{
 		if('a'<=keyText[i] && keyText[i]<='z')
 			keyText[i]=keyText[i]-32;
+		else if('A'>keyText[i] || keyText[i]>'Z')
+			break;
+	}
+	if (i!=keyTextLen || keyTextLen==0)
+	{
+		printf("Hibás kulcs!");
+		return -1;
 	}
 #if DEBUG
 	printf("DEBUG: key text:%s\n",keyText);
 #endif
 
-// Interling key to long of text //
+// Generate a long key text //
 	codeTextLen = strlen(codeText);
 	while(strlen(keyTextLong)<codeTextLen)
 		strcat(keyTextLong, keyText);
@@ -153,7 +169,7 @@ int main()
 	if(codetablefile==NULL)
 	{
 		printf("Error opening input file %s\n", VIGENERE_INPUT_FILE);
-		return 0;
+		return -1;
 	}
 	for(i=0; i<ABC_SIZE && fscanf(codetablefile, "%s", vtable[i])!=0; i++)
 	{
@@ -171,7 +187,7 @@ int main()
 	encodeText[i]=0;
 	printf("Kódolt szöveg: %s\n", encodeText);
 
-// Write to file the encoded text //
+// Write the encoded text into file //
 	FILE *fp=fopen(VIGENERE_OUTPUT_FILE,"w");
 	if(fp!=NULL)
 	{
@@ -181,11 +197,8 @@ int main()
 	else
 	{
 		printf("Error opening output file %s\n", VIGENERE_OUTPUT_FILE);
-		return 0;
+		return -1;
 	}
 
 	return 0;
 }
-
-// Most próbálok egy nagyon hosszú szöveget beírni, aminek a hossza pont kétszázöntenöt karakter. Ez nem is olyan könnyû. FElsorlolom az összes ékezetet: áéûúõóüöí és nagybetûsen is: ÉÁÛÕÚÜÖÓÍ. Most már csak kb ötven betû kellene még. Persze a nem betûk mia
-// MostpróbálokegynagyonhosszúszövegetbeírniaminekahosszapontkétszázöntenötkarakterEznemisolyankönnyûFElsorlolomazösszesékezetetáéûúõóüöíésnagybetûsenisÉÁÛÕÚÜÖÓÍMostmárcsakkbötvenbetûkellenemégPerszeanembetûkmiattennéljóvaltöbbkellLátniakaromhogyeztisjólkeze
