@@ -11,7 +11,6 @@ public:
 class CArrayCodeTable: public ICodeTable
 {
 public:
-	CArrayCodeTable();
 	CArrayCodeTable(const char* cFilename);
 	virtual char Get(const char cText, const char cKey);
 

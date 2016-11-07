@@ -4,11 +4,6 @@
 #include "codetable.h"
 #include "vigenere.h"
 
-CArrayCodeTable::CArrayCodeTable()
-{
-	memset(vtable, 0, sizeof(char) * abc_size * abc_size);
-}
-
 CArrayCodeTable::CArrayCodeTable(const char* cFilename)
 {
 // Load vtabla.dat into memory //
